@@ -1,0 +1,165 @@
+<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+
+        <sub-header [title]="'Workflow SLA Setup' | localize">
+
+        </sub-header>
+
+
+
+
+
+        <div [class]="containerClass">
+            <div class="card card-custom " [busyIf]="saving">
+                <div class="card-body">
+                    <form #slaForm="ngForm" (ngSubmit)="save(slaForm)">
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="SLAName">{{"SLA Name" | localize}}</label>
+                                    <input id="slaName" type="text" name="slaName" [(ngModel)]="slainterval.slaName"
+                                        placeholder="Enter Level Name" required class="form-control rounded">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Duration">{{"Duration in Hours" | localize}}</label>
+                                    <input id="duration" type="number" min="1" step="1" pattern="^\d$" name="duration"
+                                        [(ngModel)]="slainterval.duration" placeholder="e.g 1" required
+                                        class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="custom-control custom-checkbox form-group">
+                                    <label for="email">{{"Escalation Type" | localize}}</label>
+                                    <!-- <input type="checkbox" class="custom-control-input" id="customCheck2"  [(ngModel)]="slainterval.action" name="action">
+                                    <label class="custom-control-label" for="customCheck2">Should Approval Move to the next person when SLA Interval is not met or not</label>
+                                   -->
+                                    <ng-select [(ngModel)]="slainterval.action" name="escalationType" required
+                                        (ngModelChange)="ChangeType()">
+                                        <ng-option value='0'> Select Escalation Type</ng-option>
+                                        <ng-option value="Hierarchical">Hierarchical</ng-option>
+                                        <ng-option value="Functional">Functional</ng-option>
+
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="email">{{"Email" | localize}}</label>
+                                    <input id="email" type="email" name="email" [(ngModel)]="slainterval.email"
+                                        placeholder="escalateto@company.com" required
+                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" [disabled]="isHierarchical"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+
+                                <div class="form-group">
+
+                                    <button type="submit" [disabled]="!slaForm.form.valid"
+                                        class="btn btn-primary rounded form-control mt-10">
+                                        {{ "Save" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+
+                            <p-table #dataTable [value]="primengTableHelper.records"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10"
+                                [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple"
+                                [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns">
+
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+
+                                        <th style="width: 100px">
+
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{'SLA Name' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{'Duration' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{'Escalation Type' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{'Notification' | localize}}
+                                        </th>
+
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 100px">
+                                            <div class="btn-group dropdown" dropdown container="body">
+                                                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                    {{"Actions" | localize}}
+                                                </button>
+                                                <ul class="dropdown-menu" *dropdownMenu>
+                                                    <li>
+                                                        <a href="javascript:;" (click)="edit(record)">{{'Edit' |
+                                                            localize}}</a>
+                                                    </li>
+                                                    <!-- <li>
+                                                    <a href="javascript:;" (click)="delete(record)">{{'Delete' | localize}}</a>
+                                                </li> -->
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.slaName}}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.duration}}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Action Type' | localize}}</span>
+                                            {{record.action}}
+                                            <!-- <div *ngIf="record.action!=='H'">
+                                                {{'Functional' | localize}}
+                                            </div>
+                                            <div *ngIf="record.action!='F'">
+                                                {{'Hierarchical' | localize}}
+                                            </div> -->
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Notification' | localize}}</span>
+                                            {{record.email}}
+                                        </td>
+
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

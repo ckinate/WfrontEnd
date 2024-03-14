@@ -1,0 +1,773 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Workflow Tracker' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="small mb-1" for="description"
+                                >Select Operation Name</label
+                            >
+
+                            <ng-select
+                                [(ngModel)]="operationId"
+                                name="operationId"
+                                required
+                                (change)="WorkflowTracker(operationId)"
+                            >
+                                <ng-option [value]="0">
+                                    Select Operation</ng-option
+                                >
+
+                                <ng-option
+                                    *ngFor="let operationitem of operationList"
+                                    [value]="operationitem.id"
+                                >
+                                    {{ operationitem.description }}</ng-option
+                                >
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!hidetab">
+                        <tabset class="tab-container tabbable-line">
+                            <tab heading="Pending Request">
+                                <div class="kt-form">
+                                    <div class="primeng-datatable-container">
+                                        <p-table
+                                            #dataTable
+                                            [value]="pendingrecords"
+                                            rows="{{
+                                                primengTableHelper.defaultRecordsCountPerPage
+                                            }}"
+                                            [lazy]="false"
+                                            [scrollable]="true"
+                                            ScrollWidth="100%"
+                                            [responsive]="
+                                                primengTableHelper.isResponsive
+                                            "
+                                            [resizableColumns]="
+                                                primengTableHelper.resizableColumns
+                                            "
+                                            dataKey="id"
+                                            [filterDelay]="0"
+                                            [globalFilterFields]="[
+                                                'ref',
+                                                'operationName',
+                                                'processedDate',
+                                                'narration',
+                                                'amount'
+                                            ]"
+                                            [rowHover]="true"
+                                            styleClass="p-datatable-sm"
+                                            [paginator]="true"
+                                            [rows]="10"
+                                            [rowsPerPageOptions]="[
+                                                5,
+                                                10,
+                                                15,
+                                                20
+                                            ]"
+                                            sortMode="multiple"
+                                        >
+                                            <ng-template pTemplate="caption">
+                                                <div style="text-align: right">
+                                                    <i
+                                                        class="pi pi-search"
+                                                        style="
+                                                            margin: 4px 4px 0 0;
+                                                        "
+                                                    ></i>
+                                                    <input
+                                                        type="text"
+                                                        size="50"
+                                                        id="search-text"
+                                                        aria-describedby="search-text"
+                                                        pInputText
+                                                        (input)="
+                                                            dataTable.filterGlobal(
+                                                                $event.target
+                                                                    .value,
+                                                                'contains'
+                                                            )
+                                                        "
+                                                        style="width: auto"
+                                                        placeholder="Enter text to search"
+                                                        autofocus
+                                                    />
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th>Action</th>
+                                                    <!-- <th>
+                                                    {{'Initiator' | localize}}
+                                                </th> -->
+                                                    <th pSortableColumn="ref">
+                                                        RefNo
+                                                        <p-sortIcon
+                                                            field="ref"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <!-- <th pSortableColumn="operationName">Operation <p-sortIcon field="operationName">
+                                                    </p-sortIcon>
+                                                </th> -->
+
+                                                    <th
+                                                        pSortableColumn="transactionDate"
+                                                    >
+                                                        {{
+                                                            "Transaction Date"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="transactionDate"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <th pSortableColumn="state">
+                                                        {{ "State" | localize }}
+                                                        <p-sortIcon
+                                                            field="state"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="status"
+                                                    >
+                                                        {{
+                                                            "Status" | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="status"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="operationName"
+                                                    >
+                                                        {{
+                                                            "Operation"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="operationName"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="narration"
+                                                    >
+                                                        {{
+                                                            "Narration"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="narration"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="amount"
+                                                    >
+                                                        {{ "Amount" | localize
+                                                        }}<p-sortIcon
+                                                            field="amount"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th></th>
+
+                                                    <!-- <th style="width: 8rem"></th> -->
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                                pTemplate="body"
+                                                let-record="$implicit "
+                                            >
+                                                <tr class="p-selectable-row">
+                                                    <!-- <tr class="p-selectable-row" *ngFor="let record of pendingrecords | filter: searchText"> -->
+                                                    <td style="width: 15%">
+                                                        <div
+                                                            class="btn-group dropdown"
+                                                            dropdown
+                                                            container="body"
+                                                        >
+                                                            <button
+                                                                dropdownToggle
+                                                                class="dropdown-toggle btn btn-sm btn-primary"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-cog"
+                                                                ></i
+                                                                ><span
+                                                                    class="caret"
+                                                                ></span>
+                                                                {{
+                                                                    "Actions"
+                                                                        | localize
+                                                                }}
+                                                            </button>
+                                                            <ul
+                                                                class="dropdown-menu"
+                                                                *dropdownMenu
+                                                            >
+                                                                <li>
+                                                                    <a
+                                                                        href="javascript:;"
+                                                                        (click)="
+                                                                            delete(
+                                                                                record
+                                                                            )
+                                                                        "
+                                                                        >{{
+                                                                            "Delete"
+                                                                                | localize
+                                                                        }}</a
+                                                                    >
+                                                                </li>
+                                                                <li>
+                                                                    <a
+                                                                        href="javascript:;"
+                                                                        (click)="
+                                                                            view(
+                                                                                record
+                                                                            )
+                                                                        "
+                                                                        >{{
+                                                                            "Send Reminder"
+                                                                                | localize
+                                                                        }}</a
+                                                                    >
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- <td style="width: 15%">
+            
+                                                    <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                    {{record.initiator}}
+                                                </td> -->
+                                                    <td style="width: 15%">
+                                                        {{ record.ref }}
+                                                    </td>
+                                                    <!-- <td style="width: 15%">
+            
+                                                    {{record.operationName}}
+            
+                                                </td> -->
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.transactionDate
+                                                                | luxonFormat
+                                                                    : "DD HH:mm:ss"
+                                                        }}
+                                                    </td>
+
+                                                    <!-- <td style="width: 15%">
+            
+                                                    {{record.nextRoleName}}
+            
+                                                </td> -->
+
+                                                    <td style="width: 15%">
+                                                        {{ record.state }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{ record.status }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.operationName
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.narration }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.amount }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        <button
+                                                            class="btn"
+                                                            (click)="
+                                                                outstandingauthorizermodal(
+                                                                    record.ref,
+                                                                    record.operationId,
+                                                                    record.workflowDefinitionId,
+                                                                    record.amount
+                                                                )
+                                                            "
+                                                        >
+                                                            View approval
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+
+                                        <!-- <div class="primeng-paging-container">
+                                        <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginatorAuditLogs
+                                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                        </p-paginator>
+            
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </tab>
+
+                            <tab heading="Approved Request">
+                                <div class="kt-form">
+                                    <div class="primeng-datatable-container">
+                                        <p-table
+                                            #dataTableApproved
+                                            [value]="approvedrecords"
+                                            rows="{{
+                                                primengTableHelperApproved.defaultRecordsCountPerPage
+                                            }}"
+                                            [lazy]="false"
+                                            [scrollable]="true"
+                                            ScrollWidth="100%"
+                                            [responsive]="
+                                                primengTableHelperApproved.isResponsive
+                                            "
+                                            [resizableColumns]="
+                                                primengTableHelperApproved.resizableColumns
+                                            "
+                                            dataKey="id"
+                                            [filterDelay]="0"
+                                            [globalFilterFields]="[
+                                                'ref',
+                                                'operationName',
+                                                'processedDate',
+                                                'narration',
+                                                'amount'
+                                            ]"
+                                            [rowHover]="true"
+                                            styleClass="ui-table-customers"
+                                            [paginator]="true"
+                                            [rows]="10"
+                                            [rowsPerPageOptions]="[
+                                                5,
+                                                10,
+                                                15,
+                                                20
+                                            ]"
+                                            sortMode="multiple"
+                                        >
+                                            <ng-template pTemplate="caption">
+                                                <div style="text-align: right">
+                                                    <i
+                                                        class="pi pi-search"
+                                                        style="
+                                                            margin: 4px 4px 0 0;
+                                                        "
+                                                    ></i>
+                                                    <input
+                                                        type="text"
+                                                        size="50"
+                                                        id="search-text"
+                                                        aria-describedby="search-text"
+                                                        pInputText
+                                                        (input)="
+                                                            dataTableApproved.filterGlobal(
+                                                                $event.target
+                                                                    .value,
+                                                                'contains'
+                                                            )
+                                                        "
+                                                        style="width: auto"
+                                                        placeholder="Enter text to search"
+                                                        autofocus
+                                                    />
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="ref">
+                                                        RefNo
+                                                        <p-sortIcon
+                                                            field="ref"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <th
+                                                        pSortableColumn="transactionDate"
+                                                    >
+                                                        {{
+                                                            "Transaction Date"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="transactionDate"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <th pSortableColumn="state">
+                                                        {{ "State" | localize }}
+                                                        <p-sortIcon
+                                                            field="state"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="status"
+                                                    >
+                                                        {{
+                                                            "Status" | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="status"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="operationName"
+                                                    >
+                                                        {{
+                                                            "Operation"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="operationName"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="narration"
+                                                    >
+                                                        {{
+                                                            "Narration"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="narration"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="amount"
+                                                    >
+                                                        {{
+                                                            "Amount" | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="amount"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th pSortableColumn="ref">
+                                                        {{ "Approval Trail" }}
+                                                        <p-sortIcon
+                                                            field="ref"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                                pTemplate="body"
+                                                let-record="$implicit "
+                                            >
+                                                <tr class="p-selectable-row">
+                                                    <td style="width: 15%">
+                                                        {{ record.ref }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.transactionDate
+                                                                | luxonFormat
+                                                                    : "DD HH:mm:ss"
+                                                        }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{ record.state }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{ record.status }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.operationName
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.narration }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.amount }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        <button
+                                                            class="btn"
+                                                            (click)="
+                                                                opexWorkflowTrailModal.show(
+                                                                    record.ref
+                                                                )
+                                                            "
+                                                        >
+                                                            view approval
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                            </tab>
+
+                            <tab heading="Declined Request">
+                                <div class="kt-form">
+                                    <div class="primeng-datatable-container">
+                                        <p-table
+                                            #dataTableDeclined
+                                            [value]="declinerecords"
+                                            rows="{{
+                                                primengTableHelperDeclined.defaultRecordsCountPerPage
+                                            }}"
+                                            [lazy]="false"
+                                            [scrollable]="true"
+                                            ScrollWidth="100%"
+                                            [responsive]="
+                                                primengTableHelperDeclined.isResponsive
+                                            "
+                                            [resizableColumns]="
+                                                primengTableHelperDeclined.resizableColumns
+                                            "
+                                            dataKey="id"
+                                            [filterDelay]="0"
+                                            [globalFilterFields]="[
+                                                'ref',
+                                                'operationName',
+                                                'processedDate',
+                                                'narration',
+                                                'amount'
+                                            ]"
+                                            [rowHover]="true"
+                                            styleClass="ui-table-customers"
+                                            [paginator]="true"
+                                            [rows]="10"
+                                            [rowsPerPageOptions]="[
+                                                5,
+                                                10,
+                                                15,
+                                                20
+                                            ]"
+                                            sortMode="multiple"
+                                        >
+                                            <ng-template pTemplate="caption">
+                                                <!-- <div style="text-align: right">
+                                                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                                <input type="text" pInputText size="50" placeholder="Global Filter"
+                                                    (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+                                                    style="width:auto">
+                                            </div> -->
+                                                <div style="text-align: right">
+                                                    <i
+                                                        class="pi pi-search"
+                                                        style="
+                                                            margin: 4px 4px 0 0;
+                                                        "
+                                                    ></i>
+                                                    <input
+                                                        type="text"
+                                                        size="50"
+                                                        id="search-text"
+                                                        aria-describedby="search-text"
+                                                        pInputText
+                                                        (input)="
+                                                            dataTableDeclined.filterGlobal(
+                                                                $event.target
+                                                                    .value,
+                                                                'contains'
+                                                            )
+                                                        "
+                                                        style="width: auto"
+                                                        placeholder="Enter text to search"
+                                                        autofocus
+                                                    />
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <!-- <th style="width: 3rem"></th> -->
+                                                    <!-- <th>
+                                                    {{'Initiator' | localize}}
+                                                </th> -->
+                                                    <th pSortableColumn="ref">
+                                                        RefNo
+                                                        <p-sortIcon
+                                                            field="ref"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <!-- <th pSortableColumn="operationName">Operation <p-sortIcon field="operationName">
+                                                    </p-sortIcon>
+                                                </th> -->
+
+                                                    <th
+                                                        pSortableColumn="transactionDate"
+                                                    >
+                                                        {{
+                                                            "Transaction Date"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="transactionDate"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <!-- <th pSortableColumn="previousRole">
+                                                    {{'PreviousRole' | localize}}
+                                                    <p-sortIcon field="previousRole"></p-sortIcon>
+                                                </th>
+            
+                                                <th pSortableColumn="nextRole">
+                                                    {{'NextRole' | localize}}
+                                                    <p-sortIcon field="nextRole"></p-sortIcon>
+                                                </th> -->
+                                                    <th pSortableColumn="state">
+                                                        {{ "State" | localize }}
+                                                        <p-sortIcon
+                                                            field="state"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="status"
+                                                    >
+                                                        {{
+                                                            "Status" | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="status"
+                                                        ></p-sortIcon>
+                                                    </th>
+                                                    <th
+                                                        pSortableColumn="operationName"
+                                                    >
+                                                        {{
+                                                            "Operation"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="operationName"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <th
+                                                        pSortableColumn="narration"
+                                                    >
+                                                        {{
+                                                            "Narration"
+                                                                | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="narration"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <th
+                                                        pSortableColumn="amount"
+                                                    >
+                                                        {{
+                                                            "Amount" | localize
+                                                        }}
+                                                        <p-sortIcon
+                                                            field="amount"
+                                                        ></p-sortIcon>
+                                                    </th>
+
+                                                    <!-- <th style="width: 8rem"></th> -->
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                                pTemplate="body"
+                                                let-record="$implicit"
+                                            >
+                                                <tr
+                                                    class="p-selectable-row"
+                                                    *ngFor="
+                                                        let record of declinerecords
+                                                            | filter: searchText
+                                                    "
+                                                >
+                                                    <!-- <td style="width: 15%">
+            
+                                                    <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                    {{record.initiator}}
+                                                </td> -->
+                                                    <td style="width: 15%">
+                                                        {{ record.ref }}
+                                                    </td>
+                                                    <!-- <td style="width: 15%">
+            
+                                                    {{record.operationName}}
+            
+                                                </td> -->
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.transactionDate
+                                                                | luxonFormat
+                                                                    : "DD HH:mm:ss"
+                                                        }}
+                                                    </td>
+                                                    <!-- <td style="width: 15%">
+            
+                                                    {{record.previousRoleName}}
+            
+                                                </td>
+                                                <td style="width: 15%">
+            
+                                                    {{record.nextRoleName}}
+            
+                                                </td> -->
+
+                                                    <td style="width: 15%">
+                                                        {{ record.state }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{ record.status }}
+                                                    </td>
+
+                                                    <td style="width: 15%">
+                                                        {{
+                                                            record.operationName
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.narration }}
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        {{ record.amount }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+
+                                        <!-- <div class="primeng-paging-container">
+                                        <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginatorAuditLogs
+                                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                        </p-paginator>
+            
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </tab>
+                        </tabset>
+                    </div>
+
+                    <!--<Primeng-TurboTable-Start>-->
+
+                    <!--<Primeng-TurboTable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<commentModal #commentModal></commentModal>
+<opexWorkflowTrailModal #opexWorkflowTrailModal></opexWorkflowTrailModal>
+<outstandingAuthorizersModal #outstandingAuthorizersModal>
+</outstandingAuthorizersModal>

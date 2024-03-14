@@ -1,0 +1,23 @@
+
+<div [@routerTransition]>
+      <div *ngIf="detail">
+
+    <div class="card">
+      <div class="card-header"><h3>{{detail.viewModelSchema.displayName}}</h3>
+      
+      </div>
+    
+    <div class="card-body">
+    <form [formGroup]="detailsForm" class="form-horizontal" novalidate>
+      <div class="row">
+        <app-control-container [detailsForm]="detailsForm"
+          *ngFor="let property of detail.propertiesDescriptors" [viewModelProperty]="property" [editable]="editable">
+        </app-control-container>
+
+      </div>
+     
+    </form>
+    </div>
+    </div>
+  </div>
+</div>

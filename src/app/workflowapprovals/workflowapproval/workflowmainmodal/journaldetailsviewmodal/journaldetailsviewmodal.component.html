@@ -1,0 +1,130 @@
+<div [@routerTransition]>
+
+    <!-- <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+	       <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{"Request Setup" | localize}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        {{"Request Setup" | localize}}
+                    </span>
+                 
+                   
+                </div> 
+                
+            </div>
+        </div>
+    </div> -->
+
+
+
+    <div class=" + ' kt-grid__item kt-grid__item--fluid'">
+        <div class="kt-portlet">
+             <div class="kt-portlet__body">
+
+             
+                                   
+                  
+                    
+                   
+                   
+                   <h3>Journal Entry </h3>
+               
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                  <div class="primeng-datatable-container"
+                      [busyIf]="approvalviewdetailmodalTableHelper.isLoading">
+                      
+                      <p-table #approvalviewdetailmodalTable 
+                      [value]="approvalviewdetailmodalTableHelper.records"
+                      rows="{{approvalviewdetailmodalTableHelper.defaultRecordsCountPerPage}}"
+                      [paginator]="false" [lazy]="true" scrollable="true" ScrollWidth="100%"
+                      responsive="approvalviewdetailmodalTableHelper.isResponsive"
+                      resizableColumns="approvalviewdetailmodalTableHelper.resizableColumns">
+ 
+                        
+                          <ng-template pTemplate="header">
+                              <tr>
+                                  <!-- <th style="width:75px"></th> -->
+                                 
+                                  <th style="width: 130px">
+                                      {{'Reference No' | localize}}
+                                  </th>
+                                  <th style="width: 130px">
+                                     {{' Transaction Date' | localize}}
+                                 </th>
+                                 <th style="width: 130px">
+                                     {{'Debit Amount' | localize}}
+                                 </th>
+                                 <th style="width: 130px">
+                                     {{'Credit Amount' | localize}}
+                                 </th>
+                                 <th style="width: 130px">
+                                     {{'Account Code' | localize}}
+                                 </th>
+                                 <th style="width: 130px">
+                                     {{'Account Name' | localize}}
+                                 </th>
+                                 
+                                 
+                                  <!-- <th style="width:130px">
+                                      {{'Actions' | localize}}
+                                  </th>
+                                  -->
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-record="$implicit">
+                               <tr>
+                                      <td style="width: 130px">
+                                          <span class="ui-column-title"> {{'ref' | localize}}</span>
+                                          {{record.ref}}
+                                      </td>
+                                      <td style="width: 130px">
+                                         <span class="ui-column-title"> {{'ValueDate' | localize}}</span>
+                                         {{record.valueDate | luxonFormat:'DD-MMM-YYYY'}}
+                                     </td>
+                                     <td style="width: 130px">
+                                         <span class="ui-column-title"> {{'DebitAmount' | localize}}</span>
+                                         {{record.debitAmount | number:'1.2-2'}}
+                                     </td>
+                                     <td style="width: 130px">
+                                         <span class="ui-column-title"> {{'CreditAmount' | localize}}</span>
+                                         {{record.creditAmount | number:'1.2-2'}}
+                                     </td>
+                                     <td style="width: 130px">
+                                         <span class="ui-column-title"> {{'AccountCode' | localize}}</span>
+                                         {{record.chartOfAccount.accountCode}}
+                                     </td>
+                                     <td style="width: 130px">
+                                         <span class="ui-column-title"> {{'AccountName' | localize}}</span>
+                                         {{record.chartOfAccount.accountName}}
+                                     </td>
+                                    
+                                     
+                                  
+                                     <!-- <td  style="width: 130px">
+                                         <div class="btn-group dropdown" dropdown container="body">
+                                             <button type="button" class="btn " (click)="edit(record)"><i class="fas fa-edit"></i></button>
+                                            
+                                     
+                                         </div>
+                                     
+                                     </td> -->
+                                      
+                               </tr>
+                          </ng-template>
+                      </p-table>
+                     
+                      
+                  </div>
+                    <!--<Primeng-TurboTable-End>-->
+                      
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>

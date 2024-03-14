@@ -1,0 +1,191 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Workflow Definition' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <form #workflowdefinitionForm="ngForm" (ngSubmit)="save(workflowdefinitionForm)">
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="description">Select Operation Name</label>
+                                    <!-- <ng-select
+                                        name="description"
+                                        required
+                                        class="form-control rounded"
+                                        [(ngModel)]="
+                                            workflowdefinition.operationId
+                                        "
+                                    >
+                                        <ng-option
+                                            *ngFor="
+                                                let operationitem of operationList
+                                            "
+                                            [value]="operationitem.id"
+                                        >
+                                            {{ operationitem.description }}
+                                        </ng-option>
+                                    </ng-select> -->
+                                    <select name="description" required class="form-control rounded" [(ngModel)]="
+                                            workflowdefinition.operationId
+                                        ">
+                                        <option *ngFor="
+                                                let operationitem of operationList
+                                            " [value]="operationitem.id">
+                                            {{ operationitem.description }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="SLAName">{{
+                                        "Workflow Definition Name" | localize
+                                        }}</label>
+                                    <input type="text" name="workflowDefinitionName" [(ngModel)]="
+                                            workflowdefinition.workflowDefinitionName
+                                        " placeholder="Enter workflow Name" required class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="WorkFlowDescription">{{
+                                        "Workflow Description" | localize
+                                        }}</label>
+                                    <input type="text" name="workflowDescription" [(ngModel)]="
+                                            workflowdefinition.workflowDescription
+                                        " placeholder="Enter  Description" required class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="GroupName"></label>
+                                <div class="form-group">
+                                    <button type="submit" [disabled]="
+                                            !workflowdefinitionForm.form.valid
+                                        " flex="15" class="btn btn-primary form-control rounded">
+                                        {{ "Save" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable [value]="primengTableHelper.records" rows="{{
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                }}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                                ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="
+                                    primengTableHelper.resizableColumns
+                                " [globalFilterFields]="[
+                                'operationName ']">
+                                <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <em class="pi pi-search" style="margin: 4px 4px 0 0"></em>
+                                        <input type="text" pInputText size="30" placeholder="Search Keyword"
+                                            style="width: auto" (input)="
+                                            dataTable.filterGlobal(
+                                                $event.target.value,
+                                                'contains'
+                                            )
+                                        " />
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 50px">
+                                            {{ "Action" | localize }}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{ "Operation " | localize }}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{ "Workflow Name" | localize }}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{
+                                            "workflow Description" | localize
+                                            }}
+                                        </th>
+
+                                        <th style="width: 50px">Define
+                                            WorkFlow</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 50px">
+                                            <div class="btn-group dropdown" dropdown container="body">
+                                                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                    {{ "Actions" | localize }}
+                                                </button>
+                                                <ul class="dropdown-menu" *dropdownMenu>
+                                                    <li>
+                                                        <a href="javascript:;" (click)="
+                                                                Edit(record)
+                                                            ">{{
+                                                            "Edit"
+                                                            | localize
+                                                            }}</a>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <a href="javascript:;" (click)="delete(record)">{{'Delete' | localize}}</a>
+                                                    </li> -->
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Level Name" | localize
+                                                }}</span>
+                                            {{ record.operationName }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Level Name" | localize
+                                                }}</span>
+                                            {{ record.workflowDefinitionName }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Level Name" | localize
+                                                }}</span>
+                                            {{ record.workflowDescription }}
+                                        </td>
+
+                                        <td style="width: 50px">
+                                            <div class="btn-group dropdown" dropdown container="body">
+
+                                                <a href="javascript:;" (click)="
+                                                addLevelModal(record.id)
+                                                " title="Add Levels">
+                                                    <i class="fa fa-list-alt text-success"></i>
+                                                </a>
+
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <workFlowDefineProperties #workFlowDefineProperties></workFlowDefineProperties> -->
+<workflowleveldefinition #workflowleveldefinition></workflowleveldefinition>

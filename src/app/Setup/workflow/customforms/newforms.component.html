@@ -1,0 +1,51 @@
+
+<div bsModal #createOrEditModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal"
+     aria-hidden="true" [config]="{backdrop: 'static', keyboard: !saving}">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <form *ngIf="active" #createForm="ngForm" novalidate (ngSubmit)="save()">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                     Add New Form
+                        <!-- <span *ngIf="organizationUnit.id">{{"Edit" | localize}}: {{CahrtOfAccount}}</span>
+                        <span *ngIf="!organizationUnit.id">{{"CahrtOfAccount" | localize}}</span> -->
+                    </h5>
+                    <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label>{{"Form Name"| localize}}</label>
+                            <input type="text" name="formname" [(ngModel)]="cForm.name" required class="form-control">
+                        </div>
+                        <div class="col-md-5">
+                            <label>{{"Form Display Name" | localize}}</label>
+                            <input type="text" [(ngModel)]="cForm.displayName" name ="DisplayName" required class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+                    
+                    <!-- <button *ngIf="isEdit"type="submit" class="btn btn-primary"
+                         [disabled]="!editForm.form.valid"(click)="updateUser(editForm)">Update</button> -->
+
+                    <button type="submit" class="btn btn-primary" [disabled]="!createForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

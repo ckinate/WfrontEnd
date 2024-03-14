@@ -1,0 +1,94 @@
+<div class="card">
+    <div class="card-header">
+        <h5>Budget Details </h5>
+    </div>
+    <div class="card-body">
+
+        <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+            <table class="table table-hover table-light" >
+                <thead>
+                    <tr class="uppercase"> 
+                                  
+                      
+                      <th style="width: 100px" >
+                          {{'MisCode' | localize}}
+                      </th>
+                        <th style="width: 100px" >
+                            {{'Budget Amount' | localize}}
+                        </th>
+                       
+                        <th style="width: 100px" >
+                          {{'Budget Month' | localize}}
+                      </th>
+                      <th style="width: 100px" >
+                          {{'Budget Year' | localize}}
+                      </th>
+                      <th style="width: 100px" >
+                          {{'GL' | localize}}
+                      </th>
+                     
+                      <th style="width: 100px" >
+                          {{'Activity' | localize}}
+                      </th>
+                  
+            
+                     
+                     
+                     
+                      
+                       
+                       
+                    </tr>
+                </thead>
+                <tr  *ngFor="let n of records; let j = index">
+                  
+                      <td style="width: 100px">
+                          <span class="ui-column-title"> </span>
+                          {{n.misCode    }}
+                      </td>
+                      <td style="width: 100px">
+                        <span class="ui-column-title"> </span>
+                        {{n.budgetAmount}}
+                        
+                    </td>
+                    <td style="width: 100px">
+                        <span class="ui-column-title"> </span>
+                        {{n.budgetMOnth}}
+                        
+                    </td>
+                  
+                      <td style="width: 100px">
+                        <span class="ui-column-title"></span>
+                        {{n.budgetYear}}
+                       
+                    </td>
+                    
+                    <td style="width: 100px">
+                        <span class="ui-column-title"> </span>
+                        {{n.gl}}
+                        
+                    </td>
+                    <td style="width: 100px">
+                        <span class="ui-column-title"> </span>
+                        {{n.activity}}
+                        
+                    </td>
+                   
+                    
+                   
+                 
+               </tr>
+            </table>
+           </div>
+          
+
+       
+
+     
+  
+
+
+       
+
+    </div>
+</div>

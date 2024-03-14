@@ -1,0 +1,290 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static', keyboard: !saving}">
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-content">
+
+            <form *ngIf="active" #createForm="ngForm" novalidate (ngSubmit)="save()">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{cForm.displayName}}
+                       
+                    </h5>
+                    <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')"
+                        [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+
+<div class="form-group row">
+    <div  [ngClass]= "[IsDataRequired ? 'col-md-8' : 'col-md-12']">
+
+                    <div class="form-group row">
+                       
+                        <div class="col-md-6">
+                            <div class="col-md-2">
+                                <label>{{"Field" | localize}}</label>
+                            </div>
+                            <select name="ctrlOption" [(ngModel)]="controlType" (change)="controlTypeChange()"
+                                class="form-control">
+                                <option>TextBox</option>
+                                <option>TextArea</option>
+                                <option>DropDown</option>
+                                <option>CheckBox</option>
+                                <option>Date</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+
+                            <div class="col-md-2">
+                                <label>{{"FieldType" | localize}}</label>
+                            </div>
+                            <div *ngFor="let option of options"  class="form-check form-check-inline">
+                                
+                                    <input name="rdoptionType" type="radio" [disabled]="isRadioActive"
+                                        [(ngModel)]="fieldType" [checked]="option.id ==selectedOption.id"
+                                        value={{option.id}}> 
+                                        <label class="form-check-label">{{option.name}}</label>
+                                        
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        
+                        <div class="col-md-6">
+                            <div class="col-md-2">
+                                <label>{{"PlaceHolder" | localize}}</label>
+                            </div>
+                            <input name="orderctype" class="form-control" [(ngModel)]="formProperty.placeHolder"
+                                type="text">
+                        </div>
+                       
+                        <div class="col-md-6">
+                            <div class="col-md-2">
+                                <label>{{"DisplayName" | localize}}</label>
+                            </div>
+                            <input name="dnctype" class="form-control" [(ngModel)]="formProperty.displayName"
+                                type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                      
+                        <div class="col-md-6">
+                            
+                                <label>{{"Control Spacing" | localize}}</label>
+                          
+                            <select name="ctrlOption" [(ngModel)]="formProperty.spacing" class="form-control">
+                                <option [value]=12>12</option>
+                                <option [value]=6>6</option>
+                                <option [value]=4>4</option>
+                                <option [value]=3>3</option>
+
+                            </select>
+
+                        </div>
+
+                        
+                        <div class="col-md-6">
+                            
+                                <label>{{"Order" | localize}}</label>
+                           
+                            <input name="orderctype" class="form-control" [(ngModel)]="formProperty.controlOrder"
+                                type="number">
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="IsRequiredNeeded">
+                        <div class="form-group row">
+                       
+                                <label>{{"IsRequired?" | localize}}</label>
+                         
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+                                    <input name="rdoptionTypeR" type="radio" [(ngModel)]="isRequiredfield" value="true">
+                                    {{"Yes" | localize}}
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="rdoptionTypeR" type="radio" [(ngModel)]="isRequiredfield"
+                                        value="false">
+                                    {{"No" | localize}}
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>{{"ErrorMsg" | localize}}</label>
+                                <input type="text" class="form-control" name="slErrMsg" [(ngModel)]="rqErrMsg">
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="IsStrengthNeeded">
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <label>{{"StrengthLength?" | localize}}</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>{{"MinLength" | localize}}</label>
+                                <input type="number" class="form-control" name="stLengthMin" [(ngModel)]="MinLength">
+                            </div>
+                            <div class="col-md-3">
+                                <label>{{"MaxLength" | localize}}</label>
+                                <input type="number" class="form-control" name="stLengthMax" [(ngModel)]="MaxLength">
+                            </div>
+                            <div class="col-md-4">
+                                <label>{{"ErrorMsg" | localize}}</label>
+                                <input type="text" class="form-control" name="slErrMsg" [(ngModel)]="slErrMsg">
+                            </div>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+                <div class="col-md-4">
+                    
+                    <ng-container *ngIf="IsDataRequired">
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                               
+                                    <label>{{"Item Value" | localize}}</label>
+                                
+                               <input type="text" class="form-control" name="itemvalue" [(ngModel)] = "itemvalue" >
+                            </div>
+                            <div class="col-md-6">
+                                
+                                    <label>{{"Item Display Name" | localize}}</label>
+                                
+                               <input type="text" class="form-control"  name="itemdisplayname" [(ngModel)] = "itemdisplayname"  >
+                           </div>
+                        </div>
+                           <div class="row form-group">
+                               <div class="col-md-12 ">
+                               <button type="button" (click)="addData()" class="btn btn-primary rounded">
+                                   <i class="fa fa-plus"></i>
+                                   {{"Add data" | localize }}
+                               </button>
+                            </div>
+                           </div>
+                      
+                       
+                       
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">Custom Data</div>
+                               <ul class="list-group list-group-flush"  > 
+                                   <li class="list-group-item d-flex justify-content-between align-items-center"   [ngClass]="{'active': selectedIndex == i, 'list-group-item': true}" *ngFor="let item of itemdisplayList; let i=index" >
+                       {{item.description}}
+                                    
+                                   </li>
+                                 </ul>
+                                </div>
+                          
+                       
+                            </div>
+                        </div>
+                                           </ng-container>
+                </div>
+            </div>
+<hr/>
+                    <div class="form-group row">
+                        <div class="col-md-12 text-right">
+                            <button type="button" (click)="Check()" class="btn btn-primary rounded">
+                                <i class="fa fa-plus"></i>
+                                {{"Add Control" | localize }}
+                            </button>
+                        </div>
+                    </div>                   
+                   
+                </div>
+
+
+            
+    
+
+            </form>
+
+            <hr/>
+           
+
+          
+
+<div class="form-group row">
+    <div class="col-md-12">
+      
+
+        <div class="table-scrollable table-scrollable-borderless">
+            <table class="table table-hover table-light">
+                <thead>
+                    <tr class="uppercase">
+                        <th >
+                            {{'ControlType' | localize}}
+                        </th>
+                        <th>
+                            {{'DisplayName' | localize}}
+                        </th>
+                        <th>
+                            {{'Order' | localize}}
+                        </th>
+                        <th>
+                          
+                        </th>
+                       
+                        
+                    </tr>
+                </thead>
+                <tr *ngFor="let m of primengTableHelper.records; let index = index">
+
+
+                    <td>
+                        {{m.controlName}}
+                    </td>
+                    <td>
+                        {{m.displayName}}
+                       
+                    </td>
+                    <td>
+                        {{m.controlOrder}}
+                    </td>
+                    <td>
+                        <a href="javascript:;" (click)="Remove(m.id)">{{'Remove' | localize}}</a>
+                    </td>
+                    
+                   
+
+                </tr>
+            </table>
+               </div>
+
+
+           
+           
+    </div>
+</div> 
+
+            
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <input type="button" name="pview" class="form-control rounded" value="Preview Form">
+                </div>
+                <div class="col-md-6 text-right">
+                    <button type="button" (click)="completed()" class="btn btn-outline-primary rounded">
+                        <i class="fa fa-plus"></i>
+                        Completed
+                    </button>
+                </div>
+            </div>  
+
+            
+            
+         
+            
+        </div>
+    </div>
+</div>
+

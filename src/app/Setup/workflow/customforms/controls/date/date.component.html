@@ -1,0 +1,16 @@
+<div class="form-group mb-1" [formGroup]="detailsForm">
+  <label >{{controlLabel}}</label>
+  <div class="input-group">
+    <!-- <input [formControlName]="controlKey" class="form-control" ngbDatepicker #d="ngbDatepicker"  > -->
+
+    <input  #d="bsDatepicker"  datePickerMomentModifier bsDatepicker   [bsConfig]="{ adaptivePosition: true, dateInputFormat: 'YYYY-MM-DD' }"    [formControlName]="controlKey" class="form-control"
+    [readonly] ="editable"               />
+
+
+  <div class="input-group-append">
+      <button class="input-group-append btn btn-outline-secondary" (click)="d.toggle()" type="button"  [disabled]="editable">
+        <i class="fa fa-calendar"></i>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,232 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Workflow Role' | localize">
+            <div role="actions">
+                <button class="btn btn-primary" [title]="'Create New' | localize" (click)="createOrEditRole()"
+                    type="add">
+                    {{ "Create New" | localize }}
+                </button>
+            </div>
+        </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable [value]="primengTableHelper.records" rows="{{
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                }}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                                ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="
+                                    primengTableHelper.resizableColumns
+                                " [globalFilterFields]="[
+                                    'roleName',
+                                    'baseTypeName',
+                                    'amountLimityTypeName',
+                                    'minimumAmount',
+                                    'createdBy',
+                                    'maximumAmount'
+                                ]">
+                                <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <em class="pi pi-search" style="margin: 4px 4px 0 0"></em>
+                                        <input type="text" pInputText size="30" placeholder="Search Keyword"
+                                            style="width: auto" (input)="
+                                                dataTable.filterGlobal(
+                                                    $event.target.value,
+                                                    'contains'
+                                                )
+                                            " />
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 100px" id="wrole">
+                                            {{ "Actions" | localize }}
+                                        </th>
+                                        <th style="width: 100px" id="wrole" pSortableColumn="roleName">
+                                            {{ "Role" | localize }}
+                                            <p-sortIcon field="roleName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 50px" id="wrole" pSortableColumn="baseTypeName">
+                                            {{ "Base Type" | localize }}
+                                            <p-sortIcon field="baseTypeName"></p-sortIcon>
+                                        </th>
+                                        <!-- <th
+                                            style="width: 50px"
+                                            id="wrole"
+                                            pSortableColumn="amountLimityTypeName"
+                                        >
+                                            {{ "Amount Limit" | localize }}
+                                            <p-sortIcon
+                                                field="amountLimityTypeName"
+                                            ></p-sortIcon>
+                                        </th> -->
+                                        <!-- <th
+                                            style="width: 100px"
+                                            id="wrole"
+                                            pSortableColumn="minimumAmount"
+                                        >
+                                            {{ "Min Amount" | localize }}
+                                            <p-sortIcon
+                                                field="minimumAmount"
+                                            ></p-sortIcon>
+                                        </th> -->
+                                        <!-- <th
+                                            style="width: 100px"
+                                            id="wrole"
+                                            pSortableColumn="maximumAmount"
+                                        >
+                                            {{ "Max Amount" | localize }}
+                                            <p-sortIcon
+                                                field="maximumAmount"
+                                            ></p-sortIcon>
+                                        </th> -->
+                                        <th style="width: 50px" id="wrole">
+                                            {{ "Status" | localize }}
+                                        </th>
+
+                                        <th style="width: 50px" id="wrole" pSortableColumn="noOfRoleMembers">
+                                            {{ "No of Map users" | localize }}
+                                            <p-sortIcon field="noOfRoleMembers"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 50px" id="wrole"></th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 100px">
+                                            <div class="btn-group dropdown" dropdown container="body">
+                                                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                    {{ "Actions" | localize }}
+                                                </button>
+                                                <ul class="dropdown-menu" *dropdownMenu>
+                                                    <li>
+                                                        <a href="javascript:;" (click)="
+                                                                RoleCreateAndEdit.show(
+                                                                    record.id
+                                                                )
+                                                            ">{{
+                                                            "Edit"
+                                                            | localize
+                                                            }}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" (click)="
+                                                                delete(
+                                                                    record
+                                                                )
+                                                            " *ngIf="
+                                                                record.isActive
+                                                            ">{{
+                                                            "Delete"
+                                                            | localize
+                                                            }}</a>
+                                                        <!-- <a
+                                                            href="javascript:;"
+                                                            (click)="
+                                                                activate(record)
+                                                            "
+                                                            *ngIf="
+                                                                !record.isActive
+                                                            "
+                                                        >
+                                                            {{
+                                                                "Activate"
+                                                                    | localize
+                                                            }}
+                                                        </a> -->
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Level Name" | localize
+                                                }}</span>
+                                            {{ record.roleName }}
+                                        </td>
+                                        <td style="width: 50px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Level Name" | localize
+                                                }}</span>
+                                            {{ record.baseTypeName }}
+                                        </td>
+                                        <!-- <td style="width: 50px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "Level Name" | localize
+                                                }}</span
+                                            >
+                                            {{ record.amountLimityTypeName }}
+                                        </td> -->
+                                        <!-- <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "Level Name" | localize
+                                                }}</span
+                                            >
+                                            {{
+                                                record.minimumAmount
+                                                    | currency: " "
+                                            }}
+                                        </td> -->
+                                        <!-- <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "Level Name" | localize
+                                                }}</span
+                                            >
+                                            {{
+                                                record.maximumAmount
+                                                    | currency: " "
+                                            }}
+                                        </td> -->
+                                        <td style="width: 50px">
+                                            <span class="ui-column-title">
+                                                {{ "Active" | localize }}</span>
+                                            <span class="label label-success label-inline" *ngIf="record.isActive">{{
+                                                "Active" | localize }}</span>
+                                            <span class="label label-danger label-inline" *ngIf="!record.isActive">{{
+                                                "Inactive" | localize
+                                                }}</span>
+                                        </td>
+
+                                        <td style="width: 50px">
+                                            <div class="btn-group dropdown" dropdown container="body"
+                                                *ngIf="record.baseType != 1">
+                                                {{ record.noOfRoleMembers }}
+                                            </div>
+                                        </td>
+
+                                        <td style="width: 50px">
+                                            <div class="btn-group dropdown" dropdown container="body"
+                                                *ngIf="record.baseType != 1">
+                                                <a href="javascript:;" (click)="
+                                                        workflowrolemodal.show(
+                                                            record.id
+                                                        )
+                                                    " title="Add Users to Role">
+                                                    <i class="fa fa-users"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<workflowrolemodal #workflowrolemodal [id]="valuess"></workflowrolemodal>
+<app-CreateEditRoleModal #RoleCreateAndEdit (modalSave)="loadWorkflowRole()"></app-CreateEditRoleModal>

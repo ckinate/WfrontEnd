@@ -1,0 +1,79 @@
+
+
+
+<div class="card" style="  overflow-y:none">
+    <div class="card-header">
+        Pending Task
+    </div>
+    <div class="card-body"  [busyIf]="workflowTable.loading">
+        <div style=" height: 250px; overflow-y: scroll">
+            <table class="table table-hover table-light">
+                <thead>
+                    <tr class="uppercase">
+                        <th colspan="2">
+                            Operation
+                        </th>
+                        <th>
+                            Count
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                    </tr>
+                </thead>
+              
+                    <tr *ngFor="let m of workflowTable.pendingWF; let index = index">
+    
+    
+                        <td colspan="2">
+                            <div>
+                              
+                                <a [href]="appBaseUrl + '/app/workflowapproval?OPD=' + m.operationId " >{{m.operation}}</a>
+                             
+                            </div>
+        
+                        </td>
+                        <td>
+                            {{m.transactionCount}}
+                        </td>
+                        <td>
+                            {{m.amount | number:'1.2-5'}}
+                        </td>
+        
+                    </tr>
+              
+               
+            </table>
+        </div>
+      
+    </div>
+
+    <br>
+            <!-- <div class="card-body" *ngIf="hidequerylink">
+                <a [href]="appBaseUrl + '/app/workflowquery'">Click to Answer Pending Query</a>
+                
+            </div> -->
+</div>
+
+
+
+<div class="kt-portlet kt-portlet--height-fluid ">
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-label">
+
+            <h3 class="kt-portlet__head-title">
+               
+            </h3>
+
+        </div>
+        <!-- <div class="kt-portlet__head-toolbar">
+            <button (click)="workflowTable.reload()" class="btn btn-primary"><i
+                    class="fa fa-sync"></i> Refresh</button>
+        </div> -->
+    </div>
+    <div class="kt-portlet__body" [perfectScrollbar]>
+        <div class="table-scrollable table-scrollable-borderless">
+            
+        </div>
+    </div>
+</div>

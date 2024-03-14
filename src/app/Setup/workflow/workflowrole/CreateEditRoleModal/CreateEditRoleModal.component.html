@@ -1,0 +1,283 @@
+<div
+    bsModal
+    #createOrEditModal="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createOrEditModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span *ngIf="role.id">{{ l("Edit WorkFlow Role ") }}</span>
+                    <span *ngIf="!role.id">{{ l("New WorkFlow Role") }}</span>
+                </h4>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                    [disabled]="saving"
+                >
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="RoleName" class="align-items-center">{{
+                                "Role Name" | localize
+                            }}</label>
+                            <input
+                                id="Discription"
+                                type="text"
+                                name="roleName"
+                                [(ngModel)]="role.roleName"
+                                placeholder="Enter Role"
+                                required
+                                class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="form-group">
+                            <label for="options1">{{
+                                "MIS Based" | localize
+                            }}</label>
+                            <input
+                                id="options1"
+                                type="radio"
+                                name="baseType"
+                                [(ngModel)]="role.baseType"
+                                [value]="1"
+                                required
+                                class="form-control"
+                                (click)="handleChangeMis($event)"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="form-group">
+                            <label for="options2">{{
+                                "User Based" | localize
+                            }}</label>
+                            <input
+                                id="options2"
+                                type="radio"
+                                (change)="handleChangeUser($event)"
+                                name="baseType"
+                                [(ngModel)]="role.baseType"
+                                [value]="2"
+                                required
+                                class="form-control"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row" *ngIf="hideuserfield">
+                   
+                    <div class="col-md-2 text-center">
+                        <div class="form-group">
+                            <label for="options4">{{
+                                "User  Amount Limit " | localize
+                            }}</label>
+                            <input
+                                id="options4"
+                                type="radio"
+                                (change)="disableamountfield($event)"
+                                name="amountLimityType"
+                                [(ngModel)]="role.amountLimityType"
+                                [value]="2"
+                                required
+                                class="form-control"
+                            />
+                        </div> -->
+                    <!-- </div>
+                    <div class="col-md-2 text-center">
+                        <div class="form-group">
+                            <label for="options5">{{
+                                "Group Amount Limit " | localize
+                            }}</label>
+                            <input
+                                id="options5"
+                                type="radio"
+                                (change)="dontdisableamountfield($event)"
+                                name="amountLimityType"
+                                [(ngModel)]="role.amountLimityType"
+                                [value]="3"
+                                required
+                                class="form-control"
+                            />
+                        </div> -->
+                    <!-- </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="MinimumAmount">{{
+                                "Minimum Amount" | localize
+                            }}</label>
+                            <br />
+                            <p-inputNumber
+                                [disabled]="!disabledamountfield"
+                                min="0"
+                                [max]="999999999999999"
+                                [minFractionDigits]="2"
+                                [maxFractionDigits]="2"
+                                name="minimumAmount"
+                                placeholder="Enter Minimum Amount"
+                                required
+                                [(ngModel)]="role.minimumAmount" -->
+                                <!-- mode="decimal"
+                                maxlength="19"
+                            ></p-inputNumber>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="MaximumAmount">{{
+                                "Maximum Amount" | localize
+                            }}</label>
+                            <br /> -->
+                            <!-- <input id="Discription" [disabled]="!disabledamountfield"  finCurrency  type="text"  name="maximumAmount" placeholder="Enter Maximum Amount" required class="form-control" [(ngModel)]="role.maximumAmount" > -->
+                            <!-- <p-inputNumber
+                                [disabled]="!disabledamountfield"
+                                min="0"
+                                [max]="999999999999999"
+                                [minFractionDigits]="2"
+                                [maxFractionDigits]="2"
+                                name="maximumAmount"
+                                placeholder="Enter Maximum Amount"
+                                required
+                                [(ngModel)]="role.maximumAmount"
+                                mode="decimal"
+                                maxlength="19"
+                            ></p-inputNumber>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="row" *ngIf="hidemiscategory">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="mislimit">{{
+                                "Select MIS Category Limit" | localize
+                            }}</label>
+
+                            <select
+                                name="userName"
+                                required
+                                class="form-control"
+                                [(ngModel)]="role.misBaseTypeLimit"
+                            >
+                                <option
+                                    *ngFor="
+                                        let item of companystructurecategory
+                                    "
+                                    [value]="item.categoryName"
+                                >
+                                    {{ item.categoryName }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div div class="col-md-6">
+                        <div class="form-group">
+                            <label for="MaxAmount">{{
+                                "Maximum Amount" | localize
+                            }}</label>
+                            <br />
+
+                            <p-inputNumber
+                                min="0"
+                                max="9999999999999"
+                                [minFractionDigits]="2"
+                                [maxFractionDigits]="2"
+                                name="maximumamount"
+                                placeholder="Enter Amount Limit"
+                                required
+                                [(ngModel)]="role.maximumAmount"
+                                mode="decimal"
+                                maxlength="19"
+                            ></p-inputNumber>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- <div class="row" *ngIf="role.amountLimityType==3">
+                    <div class="form-group col-md-6">
+                        <label
+                            for="EditBank_IsActive"
+                            class="checkbox"
+                            
+                        >
+                            <input
+                                id="EditBank_IsActive"
+                                type="checkbox"
+                                name="IsActive"
+                                [(ngModel)]="role.isJointApproval"  
+                            />
+                            <span></span>
+                            {{ "Use role for Joint Approval?" | localize }}
+                        </label>
+                    </div>
+                    
+
+                    <div div class="col-md-6">
+                        <div class="form-group">
+                            <label for="MaxAmount">{{
+                                "Max. Number of Authorizer" | localize
+                            }}</label>
+                            <br />
+
+                            <p-inputNumber
+                                min="2"
+                                max="999999"
+                                [minFractionDigits]="0"
+                                [maxFractionDigits]="0"
+                                name="maximumamount"
+                                placeholder="Max. Number of approvals"
+                                required
+                                [(ngModel)]="role.jointApprovalCount"
+                                mode="decimal"
+                                maxlength="3"
+                            ></p-inputNumber>
+                        </div>
+                    </div>
+
+                </div> -->
+                <div class="row">
+                <div class="form-group text-right col-md-12">
+                    <button
+                        type="submit"
+                        flex="15"
+                        class="btn btn-primary"
+                        [disabled]="!role.roleName || !role.baseType"
+                        (click)="save()"
+                    >
+                        {{ "Save" | localize }}
+                    </button>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">  
+                         
+                <div class="form-group text-right col-md-8">
+                    <button
+                        class="btn btn-warning"
+                        [title]="'Cancel' | localize"
+                        action="button"
+                        (click)="close()"
+                        type="cancel"
+                    >
+                        {{ "Close" | localize }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

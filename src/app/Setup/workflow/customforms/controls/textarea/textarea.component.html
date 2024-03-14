@@ -1,0 +1,5 @@
+<div  class="form-group mb-1" [formGroup]="detailsForm">
+  <label>{{controlLabel}}</label>
+
+  <textarea class="form-control" [formControlName]="controlKey" rows="3" placeholder={{controlPlaceHolder}} [readonly] ="editable"></textarea>
+</div>

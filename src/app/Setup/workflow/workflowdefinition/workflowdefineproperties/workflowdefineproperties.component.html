@@ -1,0 +1,311 @@
+<div
+    bsModal
+    bsModal
+    #modal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Workflow Define Properties</h5>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!--Design input form for modal add chart of account-->
+                <form [formGroup]="customerInfo" class="needs-validation">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="small mb-1" for="description">Level Name</label>
+                              
+                                <input type="text" formControlName="levelName" placeholder="Enter workflow Name"
+                                required class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="GroupName">{{"Level Position" | localize}}</label>
+                                <input
+                                    id="Discription"
+                                    type="text" placeholder="Level position "
+                                    required class="form-control"
+                                    formControlName="levelPosition"
+                                    id="levelPosition"
+                                    value="{{ levelposition }}"
+                                    readonly />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="custom-control custom-checkbox form-group" >
+                                <input
+                                    type="checkbox" class="custom-control-input"
+                                    id="customCheck1"
+                                    formControlName="enforceComment" />
+                                <label
+                                    class="custom-control-label"
+                                    for="customCheck1"
+                                    >Enforce Comment at Approval</label
+                                >
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="custom-control custom-checkbox form-group">
+                                <input
+                                    type="checkbox" class="custom-control-input"
+                                    id="customCheck2" formControlName="enforceAmountLimit"/>
+                                <label
+                                    class="custom-control-label"
+                                    for="customCheck2"
+                                    >Enforce Amount Limit</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div >
+                                <label class="small mb-1" for="SLA Interval">{{
+                                    "Escalation Matrix" | localize}}</label>
+                                <select  class="form-control rounded"
+                                    formControlName="workflowSLASetupId"
+                                    placeholder="Enter SLA Interval in Hours" required>
+                                     <ng-option [value]="0">
+                                        Select Escalation</ng-option>
+                                        <option
+                                            *ngFor="let slaItem of slaList"
+                                            [value]="slaItem.id">
+                                            {{ slaItem.slaName }}
+                                        </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+             
+                        <!-- <div class="col-md-12 mt-2 text-right" *ngIf="'Pages.Workflow.Definition.DefineWork'| permission">
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    flex="15"
+                                    class="btn btn-primary"
+                                    [disabled]="!WorkflowMappingForm.form.valid"
+                                >
+                                    {{ "Add" | localize }}
+                                </button>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div class="card mt-2r">
+                        <div class="card-header " style="border-bottom: 1px solid #000;padding: 0px 0px 5px 0px;">
+                          <div class="header-container" >
+                            <span  class="pull-left" style="margin-top: 13px">
+                              Add Workflow Role Information
+                            </span>
+                            <button (click)="addProduct()" class="btn btn-primary pull-right"> +</button>
+                          </div>
+            
+            
+                        </div>
+
+                        <div class="card-body" style="background-color:rgb(243, 243, 237);border:1px solid orange; border-radius: 5px;margin-top:5px">
+                            <div class="row">
+                              <div class="col-12">
+                                <ul class="list-group">
+                                    <li class="list-group-item" formArrayName="workflowRoles" *ngFor="let workflowRole of customerInfo.get('workflowRoles')['controls']; let i = index;">
+                                        <div [formGroupName]="i" class="row">
+                                            <div class="col-2">
+                                                <label for="options1">{{
+                                                    "workflow Role Name" | localize
+                                                }}</label>
+                                                <input type="text" formControlName="roleName" class="form-control" id="firstName" placeholder="role name" value="" required>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <div class="form-group">
+                                                    <label for="options1">{{
+                                                        "MIS Based" | localize
+                                                    }}</label>
+                                                    <input
+                                                        id="options1"
+                                                        type="radio"
+                                                        formControlName="baseType"
+                                                        [value]="1"
+                                                        
+                                                        class="form-control"
+                                                        (click)="handleChangeMis($event,i)"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <div class="form-group">
+                                                    <label for="options2">{{
+                                                        "User Based" | localize
+                                                    }}</label>
+                                                    <input
+                                                        id="options2"
+                                                        type="radio"
+                                                        (change)="handleChangeUser($event,i)"
+                                                        formControlName="baseType"
+                                                        [value]="2"
+                                                     
+                                                        class="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+                                           
+                                            <div class="col-md-4" *ngIf="hidemiscategory">
+                                                    <div class="form-group">
+                                                        <label for="mislimit">{{
+                                                            "Select MIS Category Limit" | localize
+                                                        }}</label>
+                            
+                                                        <select
+                                                           
+                                                           
+                                                            formControlName="misBaseTypeLimit"
+                                                            class="form-control"
+                                                          
+                                                        >
+                                                            <option
+                                                                *ngFor="
+                                                                    let item of companystructurecategory
+                                                                "
+                                                                [value]="item.categoryName"
+                                                            >
+                                                                {{ item.categoryName }}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                            </div>       
+                                            
+
+                                            <div class="col-md-2" *ngIf="!hideuserfield">
+                                                <div class="form-group">
+                                                    <label for="description">Select User Role</label>
+                                                    <select
+                                                    formControlName="userManagementRoleID"
+                                                        
+                                                        class="form-control"
+                                                        #temp
+                                                        (click)="IsUsermanagementIsMapToExistingLevel(temp,workflowRole.value.id, i)"
+                                                    >
+                                                    <option
+                                                            
+                                                            [value]="0"
+                                                        >
+                                                        select user role
+                                                        </option>
+                                                        <option
+                                                            *ngFor="let usermanagementrole of systemrole"
+                                                            [value]="usermanagementrole.id"
+                                                        >
+                                                            {{ usermanagementrole.displayName }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" *ngIf="!hideuserfield">
+                                                <div class="form-group">
+                                                    <label for="MinimumAmount">{{
+                                                        "Min Amount" | localize
+                                                    }}</label>
+                                                    <br />
+                                                    <input type="number" class="form-control" formControlName="minimumAmount" >
+                                                    
+                                                    <!-- <p-inputNumber
+                                                        min="0"
+                                                        max="9999999999999"
+                                                        [minFractionDigits]="2"
+                                                        [maxFractionDigits]="2"
+                                                      
+                                                        placeholder="Enter Minimum Amount"
+                                                        required
+                                                        formControlName="minimumAmount"
+                                                       
+                                                        mode="decimal"
+                                                        
+                                                    ></p-inputNumber> -->
+                                                </div>
+                                            </div>
+                    
+                                            <div class="col-md-2" *ngIf="!hideuserfield">
+                                                <div class="form-group">
+                                                    <label for="MaximumAmount">{{
+                                                        "Maximum Amount" | localize
+                                                    }}</label>
+                                                    <br />
+                                                    <input type="number" class="form-control" formControlName="maximumAmount" >
+                                                    
+                                                    <!-- <p-inputNumber
+                                                        min="0"
+                                                        max="9999999999999"
+                                                        [minFractionDigits]="2"
+                                                        [maxFractionDigits]="2"
+                                                       
+                                                        placeholder="Enter Maximum Amount"
+                                                        required
+                                                        formControlName="maximumAmount"
+                                                       
+                                                        mode="decimal"
+                                                        
+                                                    ></p-inputNumber> -->
+                                                </div>
+                                            </div> 
+                    
+                                            <!-- <div class="col-6">
+                                                <input type="text" formControlName="baseType" class="form-control" id="firstName" placeholder="" value="" required>
+                                            </div> -->
+                                         
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    <label for="MinimumAmount"></label>
+                                                    <br />
+                                                    <button  class="btn" 
+                                                    (click)="deleteworkflowrole(i)">
+                                                    <i class="fas fa-trash"></i></button>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-20 w-100 btn btn-primary btn-lg"   (click)="createCustomerInfo()" type="submit">Save Level</button>
+
+            
+                </form>
+               
+               
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"  (click)="close()">
+                    {{ "Cancel" | localize }}
+                </button>
+             
+
+
+                <!-- {{WorkflowMappingForm.value | json}} -->
+            </div>
+        </div>
+    </div>
+</div>

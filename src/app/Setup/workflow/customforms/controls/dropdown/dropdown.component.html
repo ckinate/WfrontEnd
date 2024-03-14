@@ -1,0 +1,9 @@
+<div  class="form-group mb-1" [formGroup]="detailsForm">
+  <label>{{controlLabel}}</label>
+      <select [id]="controlKey"  [formControlName]="controlKey" class="form-control"  [readonly] ="editable" >
+      <option [selected]="controlPlaceHolder"[value]="" >{{controlPlaceHolder}}</option>
+      <option  *ngFor="let opt of controlOption" [value]="opt.Id">{{opt.Description}}</option>
+      </select> 
+</div>
+
+

@@ -1,0 +1,507 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Workflow Approval Page' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div [busyIf]="saving">
+                        <label style="color:rgb(233, 6, 6);font-style: italic;">Warning: Please enter comment before you can decline request</label>
+                        <div class="row form-group">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <textarea
+                                        id="Discription"
+                                        type="textarea"
+                                        name="comment"
+                                        required
+                                        class="form-control"
+                                        [(ngModel)]="comment"
+                                        #rs
+                                        placeholder="{{ 'Comment' | localize }}"
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 text-right">
+                                <button
+                                    class="btn btn-primary form-control"
+                                    id="workflowForm"
+                                    (click)="workFlowUpdateService()"
+                                    [disabled]="hideapprovalbutton"
+                                >
+                                    Authorize
+                                </button>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <button
+                                    class="btn btn-danger form-control"
+                                    (click)="declineWorkflowService()"
+                                    [disabled]="
+                                        !comment ||
+                                        hideapprovalbutton
+                                    "
+                                >
+                                    Decline
+                                </button>
+                            </div>
+
+                          
+                        </div>
+                        
+                        <div class="row mb-4 ">
+                            <div class="col-sm-12 text-right">
+                                <button class="btn btn-primary" (click)="refresh()"><i class="fa fa-sync"></i>
+                                    {{"Refresh" | localize}}</button>
+                            </div>
+                        </div>
+                           
+                        <!-- <div class="input-group" style="text-align: right">
+                    <input  name=" searchText"   [(ngModel)]=" filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary"   (click)="getWorkflow()" type="submit"><i class="flaticon-search-1"></i></button>
+                    </span>
+
+
+                </div> -->
+
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <!--<Primeng-TurboTable-Start>-->
+                                <div class="primeng-datatable-container">
+                                    <p-table
+                                        #dataTable
+                                        [value]="records"
+                                        rows="{{
+                                            primengTableHelper.defaultRecordsCountPerPage
+                                        }}"
+                                        [lazy]="false"
+                                        scrollable="true"
+                                        ScrollWidth="100%"
+                                        responsive="primengTableHelper.isResponsive"
+                                        resizableColumns="primengTableHelper.resizableColumns"
+                                        dataKey="id"
+                                        [(selection)]="selectedItems"
+                                        selectionMode="multiple"
+                                        [filterDelay]="0"
+                                        [globalFilterFields]="[
+                                            'ref',
+                                            'initiator',
+                                            'transactionDate',
+                                            'narration',
+                                            'amount'
+                                        ]"
+                                        [rowHover]="true"
+                                        styleClass="ui-table-customers"
+                                        [paginator]="true"
+                                        [rows]="10"
+                                        [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                        sortMode="multiple"
+                                    >
+                                        <ng-template pTemplate="caption">
+                                            <div style="text-align: right">
+                                                <i
+                                                    class="pi pi-search"
+                                                    style="margin: 4px 4px 0 0"
+                                                ></i>
+                                                <input
+                                                    type="text"
+                                                    size="50"
+                                                    id="search-text"
+                                                    aria-describedby="search-text"
+                                                    pInputText
+                                                    (input)="
+                                                        dataTable.filterGlobal(
+                                                            $event.target.value,
+                                                            'contains'
+                                                        )
+                                                    "
+                                                    style="width: auto"
+                                                    placeholder="Enter text to search"
+                                                    autofocus
+                                                />
+                                            </div>
+                                        </ng-template>
+
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <!-- <th style="width: 2.25em"></th> -->
+                                                <th style="width: 7%">
+                                                    <!-- <p-tableHeaderCheckbox
+                                                        (click)="
+                                                            selectAll(
+                                                                records,
+                                                                e.checked
+                                                            )
+                                                        "
+                                                        #e
+                                                    ></p-tableHeaderCheckbox> -->
+                                                    <p-tableHeaderCheckbox
+                                                    (click)="selectWorkflow(e.checked)"
+                                                     
+                                                    #e
+                                                    ></p-tableHeaderCheckbox>
+                                                </th>
+                                                <th
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{
+                                                        "Initiated Date"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th
+                                                    style="width: 20%"
+                                                    pSortableColumn="initiator"
+                                                >
+
+<div *ngIf="selectedoperationId==20||selectedoperationId==6||selectedoperationId==22||selectedoperationId==64||selectedoperationId==57">
+{{"Finance Inputter" | localize}} <p-sortIcon
+field="initiator"
+></p-sortIcon>
+</div>
+
+<div *ngIf="selectedoperationId!=20&&selectedoperationId!=6&&selectedoperationId!=22&&selectedoperationId!=64&&selectedoperationId!=57">
+                                                    {{
+                                                        "Initiator" | localize
+                                                    }}
+                                                    <p-sortIcon
+                                                    field="initiator"
+                                                ></p-sortIcon>
+                                                </div>
+                                                   
+                                                </th>
+
+                                                <th
+                                                    pSortableColumn="ref"
+                                                    style="width: 13%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{ "Ref No." | localize }}
+                                                    <p-sortIcon
+                                                        field="ref"
+                                                    ></p-sortIcon>
+                                                </th>
+
+                                                <th
+                                                    style="width: 25%"
+                                                    pSortableColumn="narration"
+                                                >
+                                                    {{
+                                                        "Narration" | localize
+                                                    }}
+                                                    <p-sortIcon
+                                                        field="narration"
+                                                    ></p-sortIcon>
+                                                </th>
+
+                                                <!-- <th >
+                                    {{'Description' | localize}}
+                                  </th>  -->
+                                                <th
+                                                    style="width: 15%"
+                                                    pSortableColumn="amount"
+                                                >
+                                                    {{ "Amount" | localize }}
+                                                    <p-sortIcon
+                                                        field="amount"
+                                                    ></p-sortIcon>
+                                                </th>
+
+                                                <!-- <th   class="small mb-1" style="width: 15%">
+                                         {{'Amount' | localize}}
+                                     </th> -->
+                                            
+                                                <th style="width: 15%">
+                                                    {{
+                                                        "View Attachment"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 15%">
+                                                    {{
+                                                        "View Details"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 15%">
+                                                    {{
+                                                        "Approve"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 15%">
+                                                    {{
+                                                        "Enquiry Transaction"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template
+                                            pTemplate="body"
+                                            let-record="$implicit"
+                                        >
+                                            <tr  >
+                                                <td style="width: 7%" >
+                                                    <!-- <p-tableCheckbox
+                                                        [value]="record"
+                                                        [disabled]="
+                                                            record.isQueryActive ===
+                                                            1
+                                                        "
+                                            
+                                                        (click)="
+                                                            singleselect(
+                                                                record,
+                                                                e.checked
+                                                            )
+                                                        "
+                                                        #e
+                                                     
+                                                    ></p-tableCheckbox> -->
+                                                    <p-tableCheckbox
+                                                    [value]="record"
+                                                    [disabled]="
+                                                            record.isQueryActive ===
+                                                            1
+                                                        "
+                                                        (click)="selectWorkflow(e.checked)"
+
+                                                        #e
+
+                                                   
+                                                ></p-tableCheckbox>
+                                                </td>
+
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{
+                                                        record.transactionDate
+                                                            | luxonFormat: "yyyy-LL-dd HH:mm:ss "
+                                                    }}
+                                                </td>
+
+                                                <td
+                                                    style="width: 20%"
+                                                    class="small mb-1"
+                                                >
+                                                    <!-- <button type="button" pButton pRipple [pRowToggler]="record" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  (click)="getWorkflowByRefNo(record.ref)"></button>
+                                    -->
+                                                    <span
+                                                        class="ui-column-title"
+                                                    >
+                                                        {{
+                                                            "Initiator"
+                                                                | localize
+                                                        }}</span
+                                                    >
+                                                    {{ record.initiatorName }}
+                                                </td>
+                                                <td
+                                                    style="width: 13%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{ record.ref }}
+                                                </td>
+
+                                                <td
+                                                    style="width: 25%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{ record.narration }}
+                                                </td>
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                >
+                                                    {{
+                                                        record.amount
+                                                            | number: "1.2-5"
+                                                    }}
+                                                </td>
+                                               
+                                                <td
+                                                    style="width: 15%"
+                                                  
+                                                >
+                                                <span class="input-group">
+                                                    <a
+                                                    href="javascript:;"
+                                                    (click)="
+                                                        showDocument(
+                                                            record.ref,record.hasExternalDocument
+                                                        )
+                                                    "
+                                                    title="View/Upload supporting documents"
+                                                >
+                                                    <i
+                                                        class="fa fa-download"
+                                                    ></i>
+                                                </a>
+                                                <span class="badge badge-light">{{record.documentCount}}</span>
+                                                </span>
+                                                  
+                                                </td>
+
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                   
+                                                >
+                                                    <div
+                                                        class="btn-group dropdown"
+                                                        dropdown
+                                                        container="body"
+                                                        *ngIf="hideViewDetails"
+                                                    >
+                                                        <a
+                                                            href="javascript:;"
+                                                            (click)="
+                                                                add(record.ref)
+                                                            "
+                                                            title="View More Details"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info"
+                                                            ></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td
+                                                style="width: 15%"
+                                              
+                                            >
+                                            <span class="input-group" >
+                                                <button style="border: none;background-color: none;"
+                                               
+                                                [disabled]="
+                                            record.isQueryActive ===
+                                            1
+                                        "
+                                                (click)="
+                                                    workflowInlineApproval(
+                                                        record
+                                                    )
+                                                "
+                                                title="Authorize"
+                                            >
+                                                <i
+                                                    class="fa fa-check"
+                                                ></i>
+                                            </button>
+                    
+                                            </span>
+                                              
+                                            </td>
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                   
+                                                >
+                                                    <div
+                                                        class="btn-group dropdown"
+                                                        dropdown
+                                                        container="body"
+                                                    >
+                                                        <a
+                                                            href="javascript:;"
+                                                            (click)="
+                                                                querymodal(
+                                                                    record.ref,
+                                                                    record.initiator,
+                                                                    record.transactionDate,
+                                                                    record.isQueryActive
+                                                                )
+                                                            "
+                                                            title="Enquiry Transaction"
+                                                        >
+                                                            <i
+                                                                class="fas fa-comments"
+                                                            ></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <!-- <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                    *ngIf="
+                                                        record.isQueryActive ===
+                                                        1
+                                                    "
+                                                ></td>
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                    *ngIf="
+                                                        record.isQueryActive ===
+                                                        1
+                                                    "
+                                                ></td>
+                                                <td
+                                                    style="width: 15%"
+                                                    class="small mb-1"
+                                                    *ngIf="
+                                                        record.isQueryActive ===
+                                                        1
+                                                    "
+                                                ></td> -->
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+
+                                    <div class="primeng-paging-container">
+                                        <p-paginator
+                                            [rows]="
+                                                primengTableHelper.defaultRecordsCountPerPage
+                                            "
+                                            #paginator
+                                            (onPageChange)="getWorkflow($event)"
+                                            [totalRecords]="
+                                                primengTableHelper.totalRecordsCount
+                                            "
+                                            [rowsPerPageOptions]="
+                                                primengTableHelper.predefinedRecordsCountPerPage
+                                            "
+                                        >
+                                        </p-paginator>
+                                        <span class="total-records-count">
+                                            {{
+                                                l(
+                                                    "TotalRecordsCount",
+                                                    primengTableHelper.totalRecordsCount
+                                                )
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--<Primeng-TurboTable-End>-->
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+ <journalViewDetailsModal  #journalViewDetailsModal></journalViewDetailsModal>
+ <opexViewDetailsModal #opexViewDetailsModal></opexViewDetailsModal> -->
+
+    <workflowMainModal #workflowMainModal></workflowMainModal>
+
+    <!-- <appdocuments #appdocuments></appdocuments> -->
+    <appfileupload #fileUpload></appfileupload>
+    <workflowQueryModal
+        #workflowQueryModal
+        (modalSave)="getWorkflowbasedOnId()"
+    ></workflowQueryModal>
+    <workflowdetails #workflowdetails></workflowdetails>
+    <workflowLpoViewDetails #workflowLpoViewDetails ></workflowLpoViewDetails>
+</div>

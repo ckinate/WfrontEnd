@@ -1,0 +1,37 @@
+<ng-container [ngSwitch]="viewModelProperty.schema.uiControlType">
+    <ng-container *ngSwitchCase="'textbox'">
+        <app-textbox [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty" [editable]="editable">
+        </app-textbox>
+    </ng-container>
+    <ng-container *ngSwitchCase="'checkbox'">
+        <app-checkbox [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty" [editable]="editable">
+        </app-checkbox>
+    </ng-container>
+    <ng-container *ngSwitchCase="'date'">
+      <app-date [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty" [editable]="editable">
+      </app-date>
+    </ng-container>
+    <ng-container *ngSwitchCase="'dropdown'">
+      <app-dropdown [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty" [editable]="editable">
+      </app-dropdown>
+    </ng-container>
+    <ng-container *ngSwitchCase="'textarea'">
+      <app-textarea [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty" [editable]="editable">
+      </app-textarea>
+    </ng-container>
+    <!-- <ng-container *ngSwitchCase="'label'">
+      <app-label [detailsForm]="detailsForm" [viewModelProperty]="viewModelProperty">
+      </app-label>
+    </ng-container> -->
+  </ng-container>
+  
+  <ng-container *ngIf="this.detailsForm.get(this.viewModelProperty.key).touched || this.detailsForm.get(this.viewModelProperty.key).dirty">
+    <ng-container *ngFor="let item of validationDictionary">
+      <small
+        class="form-text  text-danger"
+        *ngIf="this.detailsForm.hasError(item.validation, this.viewModelProperty.key)" >
+        {{validations[item.validationGlobal]?.errorMessage}}
+      </small>
+    </ng-container>
+  </ng-container>
+  

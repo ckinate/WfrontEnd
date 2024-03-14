@@ -1,0 +1,185 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'WorkFlow Relief ' | localize">
+            <div role="actions"></div>
+        </sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <form #workFlowRelieve="ngForm" (ngSubmit)="save(workFlowRelieve)">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="StartTime">Start Time
+                                    </label>
+                                    <br />
+                                    <input (bsValueChange)="setMinDate($event)" id="StartTime" type="text"
+                                        name="StartTime" class="form-control" bsDatepicker datePickerLuxonModifier
+                                        [(date)]="userWfDelegation.startTime" [(ngModel)]="userWfDelegation.startTime"
+                                        [maxDate]="userWfDelegation.endTime" [minDate]="startdate"
+                                        [bsConfig]="{ adaptivePosition: true }" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="EndTime">End Time
+                                    </label>
+                                    <br />
+                                    <input id="EndTime" type="text" name="EndTime" class="form-control" bsDatepicker
+                                        datePickerLuxonModifier [(date)]="userWfDelegation.endTime"
+                                        [(ngModel)]="userWfDelegation.endTime" [minDate]="minPickDate"
+                                        [bsConfig]="{ adaptivePosition: true }" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="delegator" class="text-left">{{
+                                        " Delegator Name" | localize
+                                        }}</label>
+                                    <br />
+                                    <!-- <input
+                                        name="Relieve"
+                                        type="text"
+                                        [value]="relieveusers"
+                                        disabled
+                                        class="form-control m-input"
+                                        [(ngModel)]="
+                                            userWfDelegation.relieveName
+                                        "
+                                    /> -->
+                                    <ng-select [(ngModel)]="
+                                            userWfDelegation.requestorName
+                                        " id="delegator" name="Delegator" class="rounded"
+                                        (mouseover)="CheckForEmptyUserNameAndDisableSelect()" required>
+                                        <ng-option *ngFor="let t of relieveNameList" [value]="t.userName">
+                                            {{ t.name }} {{ t.surname }}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="RelieveName" class="text-left">{{
+                                        " Relieve Name" | localize
+                                        }}</label>
+                                    <br />
+                                    <!-- <input
+                                        name="Relieve"
+                                        type="text"
+                                        [value]="relieveusers"
+                                        disabled
+                                        class="form-control m-input"
+                                        [(ngModel)]="
+                                            userWfDelegation.relieveName
+                                        "
+                                    /> -->
+                                    <ng-select [(ngModel)]="
+                                            userWfDelegation.relieveName
+                                        " name="relieveName" id="RelieveName" class="rounded"
+                                        (mouseover)="CheckForEmptyUserNameAndDisableSelect()" required>
+                                        <ng-option *ngFor="let t of relieveNameList" [value]="t.userName">
+                                            {{ t.name }} {{ t.surname }}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 text-right">
+                                <div class="form-group">
+                                    <button *ngIf="recordcount <= 0" type="submit" [buttonBusy]="saving"
+                                        [busyText]="l('SavingWithThreeDot')" flex="15" class="btn btn-primary"
+                                        [disabled]="
+                                            !workFlowRelieve.form.valid ||
+                                            userWfDelegation.relieveName == null
+                                        ">
+                                        {{ "Delegate" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable [value]="primengTableHelper.records" rows="{{
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                }}" [rows]="10" [rowsPerPageOptions]="[5, 10, 15, 20]" [lazy]="false" [rowHover]="true"
+                                sortMode="multiple" [scrollable]="true" ScrollWidth="100%"
+                                [responsive]="primengTableHelper.isResponsive" [resizableColumns]="
+                                    primengTableHelper.resizableColumns
+                                ">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th id="Relief" style="width: 100px">
+                                            {{ "Delegator Name" | localize }}
+                                        </th>
+                                        <th id="Relief" style="width: 100px">
+                                            {{ "Delegate Name" | localize }}
+                                        </th>
+                                        <th id="Relief" style="width: 100px">
+                                            {{ "Start Date" | localize }}
+                                        </th>
+                                        <th id="Relief" style="width: 100px">
+                                            {{ "End Date" | localize }}
+                                        </th>
+                                        <th id="Relief" style="width: 100px" *ngIf="recordcount >= 1">
+                                            {{ "Terminate" | localize }}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Delegator Name" | localize
+                                                }}</span>
+                                            {{ record.requestorName }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Delegate Name" | localize
+                                                }}</span>
+                                            {{ record.relieveName }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                "Start Time" | localize
+                                                }}</span>
+                                            {{
+                                            record.startTime
+                                            | luxonFormat: "F"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "EndTime" | localize }}</span>
+                                            {{
+                                            record.endTime
+                                            | luxonFormat: "F"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <div class="form-group">
+                                                <button class="btn btn-danger" [buttonBusy]="loading" [busyText]="
+                                                        l('SavingWithThreeDot')
+                                                    " (click)="Terminate(record)" *ngIf="recordcount >= 1">
+                                                    <i class="far fa-stop"></i>{{ "Terminate" }}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 col-md-12 text-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

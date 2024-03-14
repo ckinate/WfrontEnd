@@ -1,0 +1,58 @@
+{
+  "remoteServiceBaseUrl": "https://localhost:44301",
+  "appBaseUrl": "http://localhost:4300",
+  "isIdentityServer": true,
+  "identityServerURL": "https://localhost:44371",
+  "identityServerLogoutUrl": "https://localhost:44371",
+  "documentUrl":"http://localhost:4500",
+  "ClientId" : "ERP.Workflow",
+  "appRedirectUri" : "http://localhost:4300",
+  "localeMappings": {
+    "angular": [
+      {
+        "from": "pt-BR",
+        "to": "pt"
+      },
+      {
+        "from": "zh-CN",
+        "to": "zh"
+      },
+      {
+        "from": "he-IL",
+        "to": "he"
+      },
+      {
+        "from": "es-MX",
+        "to": "es"
+      },
+      {
+        "from": "vi",
+        "to": "en"
+      }
+    ],
+    "luxon": [
+      {
+        "from": "es-MX",
+        "to": "es"
+      },
+      {
+        "from": "zh-Hans",
+        "to": "zh-cn"
+      },
+      {
+        "from": "vi",
+        "to": "en-gb"
+      }
+    ],
+    "recaptcha": [
+      {
+        "from": "zh-Hans",
+        "to": "zh-cn"
+      },
+      {
+        "from": "es-MX",
+        "to": "es"
+      }
+    ]
+  }
+}

@@ -1,0 +1,227 @@
+
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Workflow Query Page' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div [busyIf]="saving">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <!--<Primeng-TurboTable-Start>-->
+                                <div class="primeng-datatable-container">
+                                    <p-table
+                                        #dataTable
+                                        [value]="records"
+                                        rows="{{
+                                            primengTableHelper.defaultRecordsCountPerPage
+                                        }}"
+                                        [lazy]="false"
+                                        scrollable="true"
+                                        ScrollWidth="100%"
+                                        responsive="primengTableHelper.isResponsive"
+                                        resizableColumns="primengTableHelper.resizableColumns"
+                                        dataKey="id"
+                                        [(selection)]="selectedItems"
+                                        selectionMode="multiple"
+                                        [filterDelay]="0"
+                                        [globalFilterFields]="[
+                                            'ref',
+                                            'initiator',
+                                            'operationName'
+                                        ]"
+                                        [rowHover]="true"
+                                        styleClass="ui-table-customers"
+                                        [paginator]="true"
+                                        [rows]="10"
+                                        [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                        sortMode="multiple"
+                                    >
+                                        <ng-template pTemplate="caption">
+                                            <div style="text-align: right">
+                                                <i
+                                                    class="pi pi-search"
+                                                    style="margin: 4px 4px 0 0"
+                                                ></i>
+                                                <input
+                                                    type="text"
+                                                    size="50"
+                                                    id="search-text"
+                                                    aria-describedby="search-text"
+                                                    pInputText
+                                                    (input)="
+                                                        dataTable.filterGlobal(
+                                                            $event.target.value,
+                                                            'contains'
+                                                        )
+                                                    "
+                                                    style="width: auto"
+                                                    placeholder="Enter text to search"
+                                                    autofocus
+                                                />
+                                            </div>
+                                        </ng-template>
+
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <!-- <th    >
+
+
+                                    </th> -->
+
+                                                <th  style="width: 100px">
+                                                    {{ "Ref" | localize }}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "Operation " | localize
+                                                    }}
+                                                </th>
+
+                                                <th style="width: 100px">
+                                                    {{ "Enquiry" | localize }}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "Enquiry By" | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "Enquiry Date" | localize
+                                                    }}
+                                                </th>
+
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "Attachement" | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "Click To Respond"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{
+                                                        "View More Details"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template
+                                            pTemplate="body"
+                                            let-record="$implicit"
+                                        >
+                                            <tr>
+                                                <!-- <td  >
+                                            <p-tableRadioButton [value]="record"  (click)="singleselect(record,e.checked)" #e ></p-tableRadioButton>
+                                        </td>
+                                       -->
+                                                <td style="width: 100px">
+                                                    {{ record.refNo }}
+                                                </td>
+                                                <td style="width: 100px">
+                                                    {{ record.operationName }}
+                                                </td>
+                                                <td class="ellipsis" style="width: 100px">
+                                                    <span
+                                                        class="ui-column-title"
+                                                    >
+                                                        {{
+                                                            "Initiator"
+                                                                | localize
+                                                        }}</span
+                                                    >
+                                                    {{
+                                                        record.query
+                                                            | slice: 0:62
+                                                    }}
+                                                </td>
+                                                <td style="width: 100px">
+                                                    {{ record.queryInitiator }}
+                                                </td>
+                                                <td style="width: 100px">
+                                                    {{
+                                                        record.queryDate
+                                                            | luxonFormat
+                                                                : "DD HH:mm:ss"
+                                                    }}
+                                                </td>
+
+                                                <td style="width: 100px">
+                                                    <a
+                                                        href="javascript:;"
+                                                        title="View/Upload supporting documents"
+                                                        (click)="
+                                                            showDocument(
+                                                                record.refNo,
+                                                                record.operationId
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fa fa-download"
+                                                        ></i>
+                                                    </a>
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <a
+                                                        href="javascript:;"
+                                                        title="Click to answer query"
+                                                        (click)="
+                                                            add(
+                                                                record.refNo,
+                                                                record.queryInitiator,
+                                                                record.query,
+                                                                record.queryDate,
+                                                                record.transactionDate,
+                                                                record.operationId
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-comments"
+                                                        ></i>
+                                                    </a>
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <a
+                                                        href="javascript:;"
+                                                        title="View details"
+                                                        (click)="
+                                                            viewmoredetails(
+                                                                record.refNo,
+                                                                record.operationId
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-info"
+                                                        ></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                                <!--<Primeng-TurboTable-End>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <appdocuments #appdocuments></appdocuments>
+        <workflowQueryTrailCommentModal
+            #workflowQueryTrailCommentModal
+            (modalSave)="getWorkflowquery()"
+        ></workflowQueryTrailCommentModal>
+        <workflowdetails #workflowdetails> </workflowdetails>
+        <appfileupload #fileUpload></appfileupload>
+    </div>
+</div>

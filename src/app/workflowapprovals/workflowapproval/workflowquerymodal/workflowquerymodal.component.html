@@ -1,0 +1,318 @@
+<div appBsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approval Enquiry </h5>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <tabset>
+                    <tab heading="Enquiry" *ngIf="activeQuery !=1">
+                        <form #queryForm="ngForm" novalidate autocomplete="off" (ngSubmit)="save(queryForm)">
+
+                            <div class="row align-items-center">
+                                <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                                    <div *ngFor="let i of querytraillist">
+                                        <div style="padding: 20" class="row">
+                                            <div style="width: 45%" class="col-md-6">
+                                                <div *ngIf="
+                                                    i.queryResponse &&
+                                                    i.queryResponse.length > 1
+                                                ">
+                                                    <br /><br /><br />
+                                                    <div class="customer message__text last">
+                                                        <div>
+                                                            {{
+                                                            i.queryResponse
+                                                            | slice: 0:50
+                                                            }}
+                                                            <a href=":;"></a>
+                                                            <button class="btn" type="button" popover="{{
+                                                                i.queryResponse
+                                                            }}" popoverTitle="Full Message" placement="top">
+                                                                {{
+                                                                "...show more!"
+                                                                }}
+                                                            </button>
+                                                        </div>
+
+                                                        <div style="
+                                                            font-size: 9px;
+                                                            text-align: left;
+                                                            font-weight: bold;
+                                                        ">
+                                                            {{
+                                                            i.responseDate
+                                                            | luxonFormat
+                                                            : "F"
+                                                            }}
+                                                        </div>
+                                                        <div style="
+                                                            font-size: 9px;
+                                                            text-align: right;
+                                                            font-weight: bold;
+                                                        ">
+                                                            {{ i.fullNameOfQueryResponder }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" style="width: 45%">
+                                                <div class="team message__text last">
+                                                    <div>
+                                                        {{ i.query | slice: 0:50 }}
+                                                        <button class="btn" type="button" popover="{{ i.query }}"
+                                                            popoverTitle="Full Message" placement="top">
+                                                            {{ "...show more!" }}
+                                                        </button>
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 9px;
+                                                        text-align: left;
+                                                        font-weight: bold;
+                                                    ">
+                                                        {{
+                                                        i.queryDate
+                                                        | luxonFormat: "F"
+                                                        }}
+                                                    </div>
+                                                    <div style="
+                                                        font-size: 9px;
+                                                        text-align: right;
+                                                        font-weight: bold;
+                                                    ">
+                                                        {{ i.fullNameOfQueryInitiator }}
+                                                    </div>
+                                                </div>
+                                                <br /><br /><br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <input id="Discription" type="text" name="queryResponder" hidden="true"
+                                    value="{{ createquery.queryResponder }}" required class="form-control"
+                                    [(ngModel)]="createquery.queryResponder" />
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="description">Select User</label>
+
+                                        <select name="queryResponder" required class="form-control"
+                                            [(ngModel)]="createquery.queryResponder">
+
+                                            <option *ngFor="let userName of staffuser" [value]="userName.userName">
+                                                {{userName.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <br>
+                                    <textarea class="form-control rounded" required maxlength="500" name="query"
+                                        [(ngModel)]="createquery.query" placeholder="{{
+                                        'Enter enquiry here.  max. xter 500'
+                                            | localize
+                                    }}" style="resize: none;">
+                                </textarea>
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <br>
+                                    <button type="submit" class="btn btn-primary"
+                                        [disabled]="!queryForm.form.valid || createquery.query == null || createquery.queryResponder == null"
+                                        [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+                                        {{ "Send" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </tab>
+                    <tab heading="Enquiry History" *ngIf="activeQuery ===1">
+                        <div class="row align-items-center">
+                            <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                                <div *ngFor="let i of querytraillist">
+                                    <div style="padding: 20" class="row">
+                                        <div style="width: 45%" class="col-md-6">
+                                            <div *ngIf="
+                                                    i.queryResponse &&
+                                                    i.queryResponse.length > 1
+                                                ">
+                                                <br /><br /><br />
+                                                <div class="customer message__text last">
+                                                    <div>
+                                                        {{
+                                                        i.queryResponse
+                                                        | slice: 0:50
+                                                        }}
+                                                        <a href=":;"></a>
+                                                        <button class="btn" type="button" popover="{{
+                                                                i.queryResponse
+                                                            }}" popoverTitle="Full Message" placement="top">
+                                                            {{
+                                                            "...show more!"
+                                                            }}
+                                                        </button>
+                                                    </div>
+
+                                                    <div style="
+                                                            font-size: 9px;
+                                                            text-align: left;
+                                                            font-weight: bold;
+                                                        ">
+                                                        {{
+                                                        i.responseDate
+                                                        | luxonFormat
+                                                        : "F"
+                                                        }}
+                                                    </div>
+                                                    <div style="
+                                                            font-size: 9px;
+                                                            text-align: right;
+                                                            font-weight: bold;
+                                                        ">
+                                                        {{ i.fullNameOfQueryResponder }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" style="width: 45%">
+                                            <div class="team message__text last">
+                                                <div>
+                                                    {{ i.query | slice: 0:50 }}
+                                                    <button class="btn" type="button" popover="{{ i.query }}"
+                                                        popoverTitle="Full Message" placement="top">
+                                                        {{ "...show more!" }}
+                                                    </button>
+                                                </div>
+
+                                                <div style="
+                                                        font-size: 9px;
+                                                        text-align: left;
+                                                        font-weight: bold;
+                                                    ">
+                                                    {{
+                                                    i.queryDate
+                                                    | luxonFormat: "F"
+                                                    }}
+                                                </div>
+                                                <div style="
+                                                        font-size: 9px;
+                                                        text-align: right;
+                                                        font-weight: bold;
+                                                    ">
+                                                    {{ i.fullNameOfQueryInitiator }}
+                                                </div>
+                                            </div>
+                                            <br /><br /><br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </tab>
+                    <!-- <tab >
+                        <div class="row align-items-center">
+                            <div
+                                class="primeng-datatable-container"
+                                [busyIf]="primengTableHelper.isLoading"
+                            >
+                                <p-table
+                                    #dataTable
+                                    [value]="commentlist"
+                                    rows="{{
+                                        primengTableHelper.defaultRecordsCountPerPage
+                                    }}"
+                                    [paginator]="true"
+                                    [rows]="10"
+                                    [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                    [lazy]="false"
+                                    [rowHover]="true"
+                                    sortMode="multiple"
+                                    [scrollable]="true"
+                                    ScrollWidth="100%"
+                                    [responsive]="
+                                        primengTableHelper.isResponsive
+                                    "
+                                    [resizableColumns]="
+                                        primengTableHelper.resizableColumns
+                                    "
+                                >
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>
+                                                {{ "Authorizer" | localize }}
+                                            </th>
+                                            <th>{{ "Comment" | localize }}</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template
+                                        pTemplate="body"
+                                        let-record="$implicit"
+                                    >
+                                        <tr>
+                                            <td>
+                                                <span class="ui-column-title">
+                                                    {{
+                                                        "Description" | localize
+                                                    }}</span
+                                                >
+                                                {{ record.authorizer }}
+                                            </td>
+                                            <td>
+                                                <span class="ui-column-title">
+                                                    {{
+                                                        "Rate" | localize
+                                                    }}</span
+                                                >
+                                                {{ record.comment }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </tab> -->
+                    <!-- <tab heading="Query Attachment History">
+                        <br>
+                        <br>
+                            <div class="col-md-12">
+                                <a
+                                    href="javascript:;"
+                                    (click)="
+                                        showDocument()
+                                    "
+                                    title="Upload supporting documents"
+                                >
+                                    <em class="fa fa-upload"></em>
+                                </a>
+                                <br />
+                                <span >View Uploaded Files</span>
+                            </div>
+
+                    </tab> -->
+                </tabset>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="close()">
+                    {{ "Cancel" | localize }}
+                </button>
+            </div>
+            <!-- {{splitcostForm.value | json}} -->
+        </div>
+    </div>
+</div>
+
+<appfileupload #fileUpload></appfileupload>

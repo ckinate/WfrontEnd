@@ -1,0 +1,76 @@
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{"Custom Form" | localize}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        Create
+                    </span>
+                </div>
+               
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body" [busyIf]="saving">
+
+<div class="form-group row">
+    <div class="col-md-12 text-right">
+        <button type="submit" (click)="modalUp.show()" flex="15" class="btn btn-primary rounded"
+       >
+        {{ "Add" | localize }}
+    </button>
+    </div>
+</div>
+
+
+
+<div class="table-scrollable table-scrollable-borderless">
+    <table class="table table-hover table-light">              
+        <thead>
+            <tr> 
+              <td style="width: 100px"> {{'Name' | localize}}</td>
+                <td style="width: 100px"> {{'Display Name' | localize}}</td>
+                <td style="width: 20px"> </td>
+                <td style="width: 75px"> </td>
+                <td style="width: 75px"></td>
+
+            </tr>
+        </thead>
+     
+        <tbody>
+            <tr *ngFor="let record of primengTableHelper.records; let index = index">
+              <td style="width: 75px"> {{record.name}}</td>
+                <td style="width: 100px"> {{record.displayName}}</td>
+                <td style="width: 50px">
+                    <a href="javascript:;"
+                   (click)="modalProperty.show(record)">{{'Add Properties' | localize}}</a>
+       
+                </td>
+                <td style="width: 30px">
+                    <a href="javascript:;"
+                    (click)="EditRecord(record)">{{'Edit' | localize}}</a>
+       </td>
+                <td style="width: 30px">
+                    <a href="javascript:;"
+                    (click)="removeRecord(record)">{{'Remove' | localize}}</a>
+       </td>
+
+            </tr>
+        </tbody>                     
+    </table>
+</div> 
+
+                    
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <app-newforms #modalUp  (modalSave)="loadPage()"></app-newforms> 
+   <app-formproperties #modalProperty  ></app-formproperties>
